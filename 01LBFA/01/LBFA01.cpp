@@ -2,7 +2,7 @@
 - LB-FA01: based on codeblocks template "Small cryptographic project"    
 - AUTHOR: Jakob Ammerer
 - SOURCES: https://en.cppreference.com/cpp/algorithm/sort
-- AI-USAGE: [0], line 93
+- AI-USAGE: [0]
 */
 
 #include <iostream>
@@ -17,21 +17,15 @@ const int MAX_LETTERS = 26;
 // came up with datastructure while talking with Leon Angerer. First we tried using a map which is sim. to KV-PAIR in c# but it orders per key not per value so that would be a problem sooner or later
 // after we came to conclusion that map wont work, we got the inspo for this struct from Susanne Lastowicka, Alexander Lux, Dominik Zach. 
 
-typedef struct LetterProbability{
+struct LetterProbability{
     char letter;
     float probability;
     int letterCount;
 };
 
-
+bool IsComingBefore(const LetterProbability a, const LetterProbability b);
 // "does a come before b in the sorted list?"
 // custom comparison function for std::sort()
-bool IsComingBefore(const LetterProbability a, const LetterProbability b){ 
-    if(a.probability == b.probability){
-        return a.letter < b.letter; // if the same, alphabetic order 
-    }
-    return a.probability > b.probability; // else return greate value first
-}
 
 int main(int argc, char* argv[]) {
     
@@ -106,4 +100,11 @@ int main(int argc, char* argv[]) {
 
     encryptedFileStream.close();
     return 0;
+}
+
+bool IsComingBefore(const LetterProbability a, const LetterProbability b){ 
+    if(a.probability == b.probability){
+        return a.letter < b.letter; // if the same, alphabetic order 
+    }
+    return a.probability > b.probability; // else return greate value first
 }

@@ -3,7 +3,7 @@
 CXX      := g++
 CXXFLAGS ?= -std=c++17 -Wall -Wextra -g
 
-SRCS := $(shell find . -name '*.cpp')     # finds main.cpp and class .cpp in subfolders
+SRCS := $(shell find . -name '*.cpp') # finds .cpp in subfolders
 OBJS := $(SRCS:.cpp=.o)
 TARGET := main.exe
 
