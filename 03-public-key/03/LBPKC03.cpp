@@ -15,6 +15,8 @@
                 And for stuff like (16 + 7) / 8 = 2 (still what i wanted.)
 
                 why 7?: https://stackoverflow.com/questions/2422712/rounding-integer-division-instead-of-truncating
+
+      - [AI-1]: Correct params for mpz_import / mpz_export argument flags (1, 1, 1, 0) needed to correctly convert the raw string of bytes into the GMP in format
 */
 #include <iostream>
 #include <gmpxx.h>
@@ -56,7 +58,7 @@ int main(const int argc, const char * const argv [])
   const mpz_class N(argv[4]);
   mpz_class message;
   
-  mpz_import(message.get_mpz_t(), inputText.size(), 1, 1, 1, 0, inputText.data()); // [1] bytes to numbers
+  mpz_import(message.get_mpz_t(), inputText.size(), 1, 1, 1, 0, inputText.data()); // [1], [AI-1] bytes to numbers
 
   if (message >= N) // RSA only works for m < N
   {
@@ -76,7 +78,7 @@ int main(const int argc, const char * const argv [])
 
   size_t byteCount = 0; // needed for mpz_export, it will write the real count here
 
-  mpz_export(&outputText[0], &byteCount, 1, 1, 1, 0, result.get_mpz_t()); // same params as import [2] numbers to bytes
+  mpz_export(&outputText[0], &byteCount, 1, 1, 1, 0, result.get_mpz_t()); // same params as import [2], [AI-1] numbers to bytes
 
   
   outputText.resize(byteCount); // cut to real size (Resizes the string to contain count characters) [6]

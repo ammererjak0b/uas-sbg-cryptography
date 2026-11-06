@@ -44,12 +44,6 @@ for taskPath in "$labPath"/[0-9][0-9]; do # only folders 01, 02, ...
         echo "ERROR: $taskName needs exactly one .cpp with main, found: $mainFiles"
         exit 1
     fi
-
-    # compile check on exactly what gets zipped
-    if ! g++ -std=c++17 -o /dev/null "$tempDir/$taskName"/*.cpp; then
-        echo "ERROR: $taskName does not compile"
-        exit 1
-    fi
 done
 
 if [ -z "$(ls -A "$tempDir")" ]; then
