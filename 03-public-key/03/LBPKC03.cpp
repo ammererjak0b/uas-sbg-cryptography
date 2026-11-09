@@ -20,20 +20,13 @@
 */
 #include <iostream>
 #include <gmpxx.h>
-#include <sodium.h>
 #include "dbghelp.h"
-#include "certhelp.h"
 #include <fstream> // ifstream, ofstream
 #include <sstream> // stringstream
 #include <string>
 
 int main(const int argc, const char * const argv [])
 {
-  if (sodium_init() == -1){
-    std::cerr << "ERROR: smth is wrong with sodium" << std::endl;
-    return 1;
-  }
-
   if (argc != 5) // program + input + output + exponent + N
   {
     std::cerr << "Usage: " << argv[0] << " <inputFile> <outputFile> <e || d> <N>" << std::endl;

@@ -1,16 +1,9 @@
 #include <iostream>
 #include <gmpxx.h>
-#include <sodium.h>
 #include "dbghelp.h"
-#include "certhelp.h"
 
 int main(const int argc, const char * const argv [])
 {
-  if (sodium_init() == -1){
-    std::cerr << "ERROR: smth is wrong with sodium" << std::endl;
-    return 1;
-  }
-
   if (argc != 4)
   {
     std::cerr << "Description: RSA encryption or decryption "<< argv[0] << " <m> <e or d> <N>" << std::endl;    

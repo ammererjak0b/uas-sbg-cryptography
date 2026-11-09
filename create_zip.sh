@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: ./create_zip.sh <pathToLab>   e.g. ./create_zip.sh /home/stud/src/uas-sbg-cryptography/01LBFA/
+# usage: ./create_zip.sh <pathToLab> [--exclude <folder> ...]   e.g. ./create_zip.sh 03-public-key --exclude 00
 # zip lands in ./.submission/ (relative to where the script is called)
 
 studyProgram="ITS-B" # without year
@@ -16,16 +16,34 @@ fi
 zipName="${studyProgram}_${lastName}_${firstName}_${matriculationNumber}.zip"
 outputDir="$PWD/.submission"
 
-if [ $# -ne 1 ]; then
-    echo "ERROR: usage: ./create_zip.sh <pathToLab>"
+if [ $# -lt 1 ]; then
+    echo "ERROR: usage: ./create_zip.sh <pathToLab> [--exclude <folder> ...]"
     exit 1
 fi
 
-labPath="${1%/}" # remove trailing slash
+labPath="${1%/}" # first argument = lab folder, remove trailing slash
+shift # rest = options
 if [ ! -d "$labPath" ]; then
     echo "ERROR: $labPath is not a folder"
     exit 1
 fi
+
+excluded=() # task folders that stay out of the zip, e.g. 00
+if [ $# -gt 0 ]; then
+    if [ "$1" != "--exclude" ] || [ $# -lt 2 ]; then
+        echo "ERROR: usage: ./create_zip.sh <pathToLab> [--exclude <folder> ...]"
+        exit 1
+    fi
+    shift # drop --exclude
+    excluded=("$@") # all remaining names
+fi
+
+for excludedName in "${excluded[@]}"; do
+    if [ ! -d "$labPath/$excludedName" ]; then # typo guard, else the folder would silently stay in the zip
+        echo "ERROR: --exclude $excludedName, no such folder in $labPath"
+        exit 1
+    fi
+done
 
 tempDir=$(mktemp -d) # build folder, nothing touches the original
 trap 'rm -rf "$tempDir"' EXIT # cleanup when script ends
@@ -33,6 +51,10 @@ trap 'rm -rf "$tempDir"' EXIT # cleanup when script ends
 shopt -s nullglob # no match -> empty list instead of literal pattern
 for taskPath in "$labPath"/[0-9][0-9]; do # only folders 01, 02, ...
     taskName=$(basename "$taskPath")
+    if [[ " ${excluded[*]} " == *" $taskName "* ]]; then # name is in the exclude list
+        echo "EXCLUDED: $taskName"
+        continue
+    fi
     mkdir "$tempDir/$taskName"
 
     # only source files, no Makefile / .exe / .o / args.txt / input
@@ -57,5 +79,7 @@ rm -f "$outputDir/$zipName" # else zip adds to the old archive
 
 echo "CREATED: $outputDir/$zipName"
 unzip -l "$outputDir/$zipName"
-echo "SHA-256 of 01 (compare with hash from E-Learning):"
-sha256sum "$tempDir"/01/*
+if [ -d "$tempDir/01" ]; then # 01 may be excluded
+    echo "SHA-256 of 01 (compare with hash from E-Learning):"
+    sha256sum "$tempDir"/01/*
+fi

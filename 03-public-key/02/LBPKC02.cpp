@@ -1,16 +1,9 @@
 #include <iostream>
 #include <gmpxx.h>
-#include <sodium.h>
 #include "dbghelp.h"
-#include "certhelp.h"
 
 int main(const int argc, const char * const argv [])
 {
-  if (sodium_init() == -1){
-    std::cerr << "ERROR: smth is wrong with sodium" << std::endl;
-    return 1;
-  }
-
   if (argc != 1)
   {
     std::cerr << "ERROR: The application "<< argv[0] << " does not take any arguments. " << std::endl;    
@@ -19,7 +12,7 @@ int main(const int argc, const char * const argv [])
 
   gmp_randstate_t randomState;
   gmp_randinit_default(randomState);
-  gmp_randseed_ui(randomState, 110ul); // takes seed as unsigned long 
+  gmp_randseed_ui(randomState, 100ul); // takes seed as unsigned long 
 
   const size_t keyBits = 2048;
 
@@ -46,7 +39,7 @@ int main(const int argc, const char * const argv [])
   e = 2; // inbetween 1 and N
   
   
-  while(gcd != 1){ // counts up until e and phi have no common divisior anymore   55
+  while(gcd != 1){ // counts up until e and phi have no common divisior anymore
     e++;
     mpz_gcd(gcd.get_mpz_t(), e.get_mpz_t(), phi.get_mpz_t());    
   }

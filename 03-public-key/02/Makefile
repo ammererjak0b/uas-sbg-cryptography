@@ -1,6 +1,6 @@
 CXX ?= g++
 CXXFLAGS += -c -g -Wall -Wextra -Werror
-LDFLAGS += -lgmpxx -lgmp -lsodium -lssl -lcrypto
+LDFLAGS += -lgmpxx -lgmp
 
 SRC = $(wildcard *.cpp)
 HDR = $(wildcard *.h)
