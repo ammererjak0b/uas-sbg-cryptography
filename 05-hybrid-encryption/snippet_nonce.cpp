@@ -1,0 +1,1 @@
+const unsigned char nonce[crypto_aead_aes256gcm_NPUBBYTES] = {0};

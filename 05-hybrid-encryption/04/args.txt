@@ -1,0 +1,1 @@
+ServerReadPublicKey ../03/cert.crt
